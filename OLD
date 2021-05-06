@@ -1,0 +1,102 @@
+<?php
+
+add_action("admin_menu", "addMenu56");
+function addMenu56()
+{
+  add_menu_page("SSL", "SSL", 4, "awesome-ssl", "awesomeSSL", "dashicons-lock" );
+  add_action( 'admin_init', array( $this, 'ssl_page_init' ) );
+}
+
+function awesomeSSL() {
+ echo'<h1>SSL Settings</h1>
+  <p>Configure SSL Settings For Awesome SSL</p>
+  <?php settings_errors(); ?>
+
+			<form method="post" action="options.php">
+			</form>
+<?php }
+public function ssl_page_init(
+		register_setting(
+			'ssl_option_group', // option_group
+			'ssl_option_name', // option_name
+			array( $this, 'ssl_sanitize' ) // sanitize_callback
+		);
+
+		add_settings_section(
+			'ssl_setting_section', // id
+			'Settings', // title
+			array( $this, 'ssl_section_info' ), // callback
+			'ssl-admin' // page
+		);
+
+		add_settings_field(
+			'enable_ssl_on_this_website_0', // id
+			'Enable SSL On This Website', // title
+			array( $this, 'enable_ssl_on_this_website_0_callback' ), // callback
+			'ssl-admin', // page
+			'ssl_setting_section' // section
+		);
+
+		add_settings_field(
+			'enable_secure_connection_by_default_1', // id
+			'Enable Secure Connection By Default', // title
+			array( $this, 'enable_secure_connection_by_default_1_callback' ), // callback
+			'ssl-admin', // page
+			'ssl_setting_section' // section
+		);
+
+		add_settings_field(
+			'force_site_to_run_through_https_on_all_pages_2', // id
+			'Force Site To Run Through HTTPS On ALL Pages', // title
+			array( $this, 'force_site_to_run_through_https_on_all_pages_2_callback' ), // callback
+			'ssl-admin', // page
+			'ssl_setting_section' // section
+		);
+	}
+
+	public function ssl_sanitize($input) {
+		$sanitary_values = array();
+		if ( isset( $input['enable_ssl_on_this_website_0'] ) ) {
+			$sanitary_values['enable_ssl_on_this_website_0'] = $input['enable_ssl_on_this_website_0'];
+		}
+
+		if ( isset( $input['enable_secure_connection_by_default_1'] ) ) {
+			$sanitary_values['enable_secure_connection_by_default_1'] = $input['enable_secure_connection_by_default_1'];
+		}
+
+		if ( isset( $input['force_site_to_run_through_https_on_all_pages_2'] ) ) {
+			$sanitary_values['force_site_to_run_through_https_on_all_pages_2'] = $input['force_site_to_run_through_https_on_all_pages_2'];
+		}
+
+		return $sanitary_values;
+	}
+
+	public function ssl_section_info() {
+		
+	}
+
+	public function enable_ssl_on_this_website_0_callback() {
+		printf(
+			'<input type="checkbox" name="ssl_option_name[enable_ssl_on_this_website_0]" id="enable_ssl_on_this_website_0" value="enable_ssl_on_this_website_0" %s>',
+			( isset( $this->ssl_options['enable_ssl_on_this_website_0'] ) && $this->ssl_options['enable_ssl_on_this_website_0'] === 'enable_ssl_on_this_website_0' ) ? 'checked' : ''
+		);
+	}
+
+	public function enable_secure_connection_by_default_1_callback() {
+		printf(
+			'<input type="checkbox" name="ssl_option_name[enable_secure_connection_by_default_1]" id="enable_secure_connection_by_default_1" value="enable_secure_connection_by_default_1" %s>',
+			( isset( $this->ssl_options['enable_secure_connection_by_default_1'] ) && $this->ssl_options['enable_secure_connection_by_default_1'] === 'enable_secure_connection_by_default_1' ) ? 'checked' : ''
+		);
+	}
+
+	public function force_site_to_run_through_https_on_all_pages_2_callback() {
+		printf(
+			'<input type="checkbox" name="ssl_option_name[force_site_to_run_through_https_on_all_pages_2]" id="force_site_to_run_through_https_on_all_pages_2" value="force_site_to_run_through_https_on_all_pages_2" %s>',
+			( isset( $this->ssl_options['force_site_to_run_through_https_on_all_pages_2'] ) && $this->ssl_options['force_site_to_run_through_https_on_all_pages_2'] === 'force_site_to_run_through_https_on_all_pages_2' ) ? 'checked' : ''
+		);
+	}
+
+}
+if ( is_admin() )
+	$ssl = new SSL();
+?>
